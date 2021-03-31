@@ -1,0 +1,46 @@
+For react app:
+
+Add this to App.js:
+package:axioss
+  const apiUrl = 'http://localhost:5000';
+
+  axios.interceptors.request.use(
+    config => {
+      const { origin } = new URL(config.url);
+      const allowedOrigins = [apiUrl];
+      const token = localStorage.getItem('token'); if (allowedOrigins.includes(origin)) {
+        config.headers.authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
+    }
+  );
+
+
+Add this to your App function in App.js:
+  get token: 
+    const storedJwt = localStorage.getItem('token');
+  set token:
+     localStorage.setItem('token', res.data.token);
+     if login:
+        store token with set token
+     if logout:
+     localStorage.setItem('token', "");
+
+For google Auth:
+package:react-google-login,axios
+  async function google(response){
+      const email = response.profileObj.email
+      await axios.post("http://localhost:5000/api/googleAuth",{email}).then(res=>{
+        localStorage.setItem('token', res.data.token);
+       console.log(storedJwt)
+      })
+    }
+  <GoogleLogin
+    clientId="your clientID"
+    buttonText="Login"
+    onSuccess={google}
+    cookiePolicy={'single_host_origin'}
+  />,
